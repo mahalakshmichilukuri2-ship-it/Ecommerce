@@ -1,0 +1,183 @@
+/* MAIN CONFIRM ORDER PAGE */
+.confirm-page {
+    width: 100%;
+    min-height: 650px;
+    padding: 35px 7% 60px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* MAIN HEADING */
+.confirm-page h1 {
+    color: #174c49;
+    font-size: 36px;
+    margin: 0 0 25px;
+}
+
+/* TWO COLUMN LAYOUT */
+.confirm-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+/* WHITE CARDS */
+.confirm-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 17px;
+    box-shadow: 0 6px 18px rgba(20, 100, 90, 0.12);
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* CARD HEADINGS */
+.confirm-card h2 {
+    color: #174c49;
+    font-size: 25px;
+    margin: 0 0 20px;
+}
+
+/* PRODUCT ROWS */
+.confirm-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.2fr;
+    gap: 15px;
+    align-items: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid #d5e5e1;
+    color: #285d58;
+    font-size: 16px;
+}
+
+/* TABLE COLUMN HEADINGS */
+.confirm-header {
+    background: #d1f5e8;
+    color: #174c49;
+    font-weight: bold;
+    border-radius: 7px;
+}
+
+.confirm-header strong:last-child,
+.confirm-item span:last-child {
+    text-align: right;
+}
+
+.confirm-item span {
+    overflow-wrap: anywhere;
+}
+
+/* GRAND TOTAL */
+.confirm-card .total {
+    color: #087f70;
+    font-size: 26px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+}
+
+/* DELIVERY DETAILS */
+.delivery-details {
+    margin-bottom: 20px;
+}
+
+.delivery-details p {
+    color: #285d58;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+}
+
+.delivery-details strong {
+    color: #174c49;
+}
+
+/* PAY NOW BUTTON */
+.pay-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: #087f70;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.pay-btn:hover {
+    background: #125b53;
+    transform: translateY(-2px);
+}
+
+/* EDIT DETAILS LINK */
+.edit-link {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #087f70;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.edit-link:hover {
+    color: #125b53;
+}
+
+/* TABLET RESPONSIVENESS */
+@media (max-width: 900px) {
+    .confirm-page {
+        padding: 30px 4%;
+    }
+
+    .confirm-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 600px) {
+    .confirm-page {
+        padding: 25px 12px 40px;
+    }
+
+    .confirm-page h1 {
+        font-size: 27px;
+    }
+
+    .confirm-card {
+        padding: 18px 14px;
+    }
+
+    .confirm-card h2 {
+        font-size: 21px;
+    }
+
+    .confirm-item {
+        grid-template-columns: 1.4fr 1fr 0.8fr 1fr;
+        gap: 6px;
+        padding: 12px 5px;
+        font-size: 12px;
+    }
+
+    .confirm-card .total {
+        font-size: 21px;
+    }
+
+    .delivery-details p {
+        font-size: 14px;
+    }
+
+    .pay-btn {
+        font-size: 16px;
+    }
+}

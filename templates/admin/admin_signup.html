@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_signup.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-signup-page">
+
+    <div class="admin-signup-card">
+
+        <div class="signup-icon">👤</div>
+
+        <h2>Admin Registration</h2>
+
+        <p class="subtitle">
+            Create your SmartCart administrator account.
+        </p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="/admin-signup">
+
+            <label for="name">Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+            >
+
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+            >
+
+            <button type="submit">Send OTP</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

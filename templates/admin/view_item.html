@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Product Details | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/view_item.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-product-details-page">
+
+    <div class="admin-product-details-card">
+
+        <!-- Product Image -->
+        <div class="admin-product-image">
+            <img
+                src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}"
+                alt="{{ product.name }}">
+        </div>
+
+        <!-- Product Information -->
+        <div class="admin-product-info">
+
+            <h1>{{ product.name }}</h1>
+
+            <span class="admin-product-category">
+                {{ product.category }}
+            </span>
+
+            <h2 class="admin-product-price">
+                ₹{{ product.price }}
+            </h2>
+
+            <p class="admin-product-description">
+                {{ product.description }}
+            </p>
+
+            <div class="admin-product-actions">
+
+                <a href="{{ url_for('update_item', item_id=product.product_id) }}"
+                   class="admin-update-btn">
+                    Update Product
+                </a>
+
+                <a href="/admin/item-list" class="admin-back-btn">
+                    Back to Product List
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

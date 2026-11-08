@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Profile | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-profile-page">
+
+    <div class="admin-profile-container">
+
+        <h2>Admin Profile</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="profile-message {{ category }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- Profile Image -->
+        <div class="profile-image-section">
+
+            {% if admin.profile_image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/admin_profiles/' + admin.profile_image) }}"
+                    class="admin-profile-image"
+                    alt="Admin Profile">
+            {% else %}
+                <div class="profile-placeholder">
+                    {{ admin.name[0]|upper }}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Profile Form -->
+        <form method="POST"
+              action="/admin/profile"
+              enctype="multipart/form-data">
+
+            <div class="profile-form-group">
+                <label>Name</label>
+                <input type="text"
+                       name="name"
+                       value="{{ admin.name }}"
+                       required>
+            </div>
+
+            <div class="profile-form-group">
+                <label>Email</label>
+                <input type="email"
+                       name="email"
+                       value="{{ admin.email }}"
+                       required>
+            </div>
+
+            <div class="profile-form-group">
+                <label>New Password (optional)</label>
+                <input type="password"
+                       name="password"
+                       placeholder="Leave empty to keep old password">
+            </div>
+
+            <div class="profile-form-group">
+                <label>Upload New Profile Image (optional)</label>
+                <input type="file"
+                       name="profile_image"
+                       accept="image/*">
+            </div>
+
+            <div class="profile-buttons">
+
+                <button type="submit" class="update-profile-btn">
+                    Update Profile
+                </button>
+
+                <a href="/admin-dashboard" class="back-dashboard-btn">
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

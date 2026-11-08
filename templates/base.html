@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}SmartCart{% endblock %}</title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- User Login CSS -->
+    {% if request.endpoint == 'user_login' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_login.css') }}">
+    {% endif %}
+
+    <!-- User Registration CSS -->
+    {% if request.endpoint == 'user_register' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_register.css') }}">
+    {% endif %}
+
+    <!-- Admin Login CSS -->
+    {% if request.endpoint == 'admin_login' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_login.css') }}">
+    {% endif %}
+
+    <!-- User Dashboard CSS -->
+    {% if request.endpoint == 'user_dashboard' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}">
+    {% endif %}
+
+    {% block extra_css %}
+    {% endblock %}
+
+
+
+</head>
+
+<body>
+
+
+    <!-- COMMON NAVBAR -->
+    <nav class="navbar">
+
+        <a href="/" class="nav-logo">
+            🛒 SmartCart
+        </a>
+        <button class="menu-toggle" onclick="toggleMenu(this)" aria-label="Toggle navigation" aria-expanded="false">
+            ☰
+        </button>
+
+        {% if session.get('admin_id') %}
+
+        <div class="nav-links admin-links">
+            <a href="/admin-dashboard">Dashboard</a>
+            <a href="/admin/add-item">Add Product</a>
+            <a href="/admin/item-list">Products</a>
+            <a href="/admin/profile">Profile</a>
+        </div>
+
+        <div class="admin-navbar-right">
+            <span>Admin: {{ session.get('admin_name') }}</span>
+            <a href="/admin-logout" class="admin-logout-btn">Logout</a>
+        </div>
+
+
+
+        {% elif session.get('user_id') and (
+        request.endpoint in
+        ['user_dashboard', 'user_products', 'user_cart',
+        'user_orders', 'user_profile', 'checkout', 'confirm_order']
+        or request.path.startswith('/user/')
+        ) %}
+
+
+        <!-- USER NAVBAR -->
+
+        <div class="nav-links">
+            <a href="/user-dashboard">Home</a>
+            <a href="/user/products">Products</a>
+            <a href="/user/my-orders">My Orders</a>
+            <a href="/user/profile">Profile</a>
+        </div>
+
+        <div class="nav-auth">
+            <a href="/user/cart" class="cart-link">
+                🛒 Cart
+                <span class="cart-count">
+                    {{ session.get('cart')|length if session.get('cart') else 0 }}
+                </span>
+            </a>
+
+            <span class="welcome-user">
+                Hi, {{ user_name if user_name is defined else 'User' }}
+            </span>
+
+            <a href="/user-logout" class="logout-btn">Logout</a>
+        </div>
+
+        {% else %}
+
+        <!-- PUBLIC NAVBAR -->
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/user-login">User Login</a>
+            <a href="/user-register">Register</a>
+            <a href="/admin-login">Admin Login</a>
+        </div>
+
+        {% endif %}
+
+    </nav>
+
+
+    <!-- INDIVIDUAL PAGE CONTENT -->
+
+    <main>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- COMMON FOOTER -->
+
+    <footer class="footer">
+
+        <p>© 2026 SmartCart. All rights reserved.</p>
+
+        <p>Shop Smart. Live Better.</p>
+
+    </footer>
+
+
+    <!-- PAGE-SPECIFIC JAVASCRIPT -->
+
+    {% block scripts %}
+    {% endblock %}
+
+    <script>
+        function toggleMenu(button) {
+            const navbar = document.querySelector('.navbar');
+
+            const isOpen = navbar.classList.toggle('menu-open');
+
+            button.setAttribute('aria-expanded', isOpen);
+            button.innerHTML = isOpen ? '&times;' : '☰';
+        }
+    </script>
+</body>
+
+</html>

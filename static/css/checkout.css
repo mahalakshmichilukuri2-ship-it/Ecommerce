@@ -1,0 +1,204 @@
+
+/* =================================
+   SMARTCART CHECKOUT PAGE
+   Mint Green and Teal Theme
+================================= */
+
+.checkout-page {
+    min-height: 650px;
+    padding: 30px 20px 60px;
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+.checkout-container {
+    width: 90%;
+    max-width: 1500px;
+    margin: auto;
+}
+
+.checkout-container h1 {
+    color: #174c49;
+    font-size: 34px;
+    margin-bottom: 25px;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.checkout-form-card,
+.checkout-products-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(20, 100, 90, 0.10);
+}
+
+.checkout-form-card h2,
+.checkout-products-card h2 {
+    color: #174c49;
+    font-size: 25px;
+    margin-bottom: 22px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #285d58;
+    margin-bottom: 9px;
+    font-size: 16px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #c8ddd8;
+    border-radius: 7px;
+    font-size: 16px;
+    outline: none;
+}
+
+.form-group input {
+    height: 45px;
+}
+
+.form-group textarea {
+    height: 75px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #087f70;
+    box-shadow: 0 0 0 3px rgba(8, 127, 112, 0.10);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.checkout-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.back-btn,
+.payment-btn {
+    padding: 11px 15px;
+    border-radius: 7px;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.back-btn {
+    color: #087f70;
+    background: white;
+    border: 1px solid #087f70;
+}
+
+.payment-btn {
+    color: white;
+    background: #087f70;
+    border: none;
+}
+
+.back-btn:hover {
+    background: #e0f7f4;
+}
+
+.payment-btn:hover {
+    background: #125b53;
+}
+
+/* Product Summary */
+
+.checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkout-table th {
+    background: #e0f7f4;
+    color: #174c49;
+    text-align: left;
+    padding: 11px 7px;
+}
+
+.checkout-table td {
+    padding: 12px 7px;
+    border-bottom: 1px solid #dce9e5;
+    color: #285d58;
+}
+
+.checkout-table small {
+    display: block;
+    margin-top: 5px;
+    color: #718782;
+}
+
+.selected-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #c8ddd8;
+    margin-top: 18px;
+    padding-top: 18px;
+    color: #174c49;
+    font-size: 20px;
+}
+
+.selected-total strong:last-child {
+    color: #087f70;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+    .checkout-container {
+        width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .checkout-form-card,
+    .checkout-products-card {
+        padding: 18px;
+    }
+
+    .checkout-container h1 {
+        font-size: 28px;
+    }
+}

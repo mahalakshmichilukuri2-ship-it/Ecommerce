@@ -1,0 +1,142 @@
+
+/* =================================
+   USER DASHBOARD - SMARTCART THEME
+================================= */
+
+.dashboard-page {
+    width: 100%;
+    min-height: 650px;
+    padding: 35px 20px;
+
+    /* Original SmartCart background */
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+.dashboard-container {
+    width: 90%;
+    max-width: 1500px;
+    margin: auto;
+}
+
+/* Welcome Heading */
+
+.dashboard-heading {
+    color: #174c49;
+    font-size: 36px;
+    margin-bottom: 28px;
+}
+
+/* Dashboard Cards */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+}
+
+/* Individual Card */
+
+.dashboard-card {
+    min-height: 200px;
+    padding: 30px 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: #ffffff;
+    border-radius: 17px;
+
+    text-align: center;
+    text-decoration: none;
+
+    box-shadow: 0 6px 18px rgba(20, 100, 90, 0.10);
+
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow: 0 12px 25px rgba(20, 100, 90, 0.16);
+}
+
+/* Icons */
+
+.dashboard-icon {
+    font-size: 43px;
+    margin-bottom: 17px;
+}
+
+/* Card Heading */
+
+.dashboard-card h3 {
+    color: #087f70;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+/* Card Description */
+
+.dashboard-card p {
+    color: #285d58;
+    font-size: 16px;
+}
+
+/* Flash Messages */
+
+.dashboard-message {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.dashboard-message.success {
+    background: #d9f5e9;
+    color: #08734f;
+}
+
+.dashboard-message.error,
+.dashboard-message.danger {
+    background: #ffe3e3;
+    color: #b42318;
+}
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-heading {
+        font-size: 30px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        width: 95%;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .dashboard-heading {
+        font-size: 25px;
+    }
+
+    .dashboard-card {
+        min-height: 175px;
+    }
+}

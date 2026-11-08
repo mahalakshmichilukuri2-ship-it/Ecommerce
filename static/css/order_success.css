@@ -1,0 +1,167 @@
+
+/* Order Success Page */
+
+.order-success-page {
+    min-height: 75vh;
+    padding: 30px 7%;
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* Success Heading */
+
+.success-heading {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.success-heading h1 {
+    color: #087f70;
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.success-heading p {
+    color: #52736e;
+    font-size: 16px;
+}
+
+/* Order and Delivery Details */
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.info-card,
+.summary-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #d8ebe5;
+    box-shadow: 0 5px 15px rgba(18, 91, 83, 0.10);
+}
+
+.info-card h2,
+.summary-card h2 {
+    color: #174c49;
+    font-size: 21px;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.info-card p {
+    color: #52736e;
+    line-height: 1.5;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+.info-card strong {
+    color: #174c49;
+}
+
+/* Order Summary */
+
+.summary-card {
+    margin-bottom: 25px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.summary-card table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.summary-card th {
+    background: #087f70;
+    color: white;
+    text-align: left;
+}
+
+.summary-card th,
+.summary-card td {
+    padding: 13px 10px;
+    border: 1px solid #cce6dd;
+}
+
+.summary-card tbody tr:nth-child(even) {
+    background: #e0f7f4;
+}
+
+.summary-card tbody tr:hover {
+    background: #d1f5e8;
+}
+
+/* Action Buttons */
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 25px;
+}
+
+.success-actions .btn {
+    display: inline-block;
+    padding: 13px 19px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.primary-btn,
+.secondary-btn {
+    background: #087f70;
+    color: #ffffff;
+    border: 1px solid #087f70;
+}
+
+.success-actions .btn:hover {
+    background: #125b53;
+    border-color: #125b53;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+
+    .order-success-page {
+        padding: 25px 15px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .success-heading h1 {
+        font-size: 26px;
+    }
+
+    .success-actions {
+        flex-direction: column;
+    }
+
+    .success-actions .btn {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}

@@ -1,0 +1,117 @@
+
+{% extends "base.html" %}
+
+{% block title %}Confirm Order | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/confirm_order.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="confirm-page">
+
+    <h1>Complete Your Payment</h1>
+
+    <div class="confirm-layout">
+
+        <!-- Order Summary -->
+        <div class="confirm-card">
+
+            <h2>Order Summary</h2>
+
+            <!-- Column Headings -->
+            <div class="confirm-item confirm-header">
+                <strong>Product</strong>
+                <strong>Price</strong>
+                <strong>Quantity</strong>
+                <strong>Total</strong>
+            </div>
+
+            <!-- Selected Products -->
+            {% for item in cart.values() %}
+
+            <div class="confirm-item">
+                <span>{{ item.name }}</span>
+                <span>₹{{ item.price }}</span>
+                <span>{{ item.quantity }}</span>
+                <span>
+                    ₹{{ "%.2f"|format(item.price|float * item.quantity|int) }}
+                </span>
+            </div>
+
+            {% endfor %}
+
+            <!-- Grand Total -->
+            <h2 class="total">
+                Total Amount: ₹{{ "%.2f"|format(total) }}
+            </h2>
+
+        </div>
+
+
+        <!-- Delivery Address -->
+        <div class="confirm-card delivery-card">
+
+            <h2>Delivering To</h2>
+
+            <div class="delivery-details">
+
+                <p>
+                    <strong>Name:</strong>
+                    <strong>{{ customer.full_name }}</strong>
+                </p>
+
+                <p>
+                    <strong>Phone:</strong>
+                    {{ customer.phone }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ customer.email }}
+                </p>
+
+                <p>
+                    <strong>Door No:</strong>
+                    {{ customer.door_no }}
+                </p>
+
+                <p>
+                    <strong>Address:</strong>
+                    {{ customer.delivery_address }}
+                </p>
+
+                <p>
+                    <strong>City:</strong>
+                    {{ customer.city }}
+                </p>
+
+                <p>
+                    <strong>Pincode:</strong>
+                    {{ customer.pincode }}
+                </p>
+
+            </div>
+
+            <!-- Razorpay Payment -->
+            <form method="GET" action="/user/pay">
+
+                <button type="submit" class="pay-btn">
+                    Pay Now
+                </button>
+
+            </form>
+
+            <a href="/user/address" class="edit-link">
+                Edit Details
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/product_details.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="product-details-page">
+
+    <div class="product-details-container">
+
+        <!-- Back to Products -->
+        <a href="/user/products" class="back-products">
+            ← Back to Products
+        </a>
+
+        <!-- Product Details Card -->
+        <div class="product-details-card">
+
+            <!-- Product Image -->
+            <div class="details-image">
+                <img
+                    src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+            </div>
+
+            <!-- Product Information -->
+            <div class="details-info">
+
+                <h2>{{ product.name }}</h2>
+
+                <span class="details-category">
+                    {{ product.category }}
+                </span>
+
+                <h3 class="details-price">
+                    ₹{{ product.price }}
+                </h3>
+
+                <p class="details-description">
+                    {{ product.description }}
+                </p>
+
+                <!-- Add to Cart -->
+                <form action="/user/add-to-cart/{{ product.product_id }}"
+                      method="GET">
+
+                    <button type="submit" class="add-cart-btn">
+                        🛒 Add to Cart
+                    </button>
+
+                </form>
+
+                <!-- Additional Links -->
+                <div class="details-links">
+
+                    <a href="/user/address">
+                        Proceed to Checkout →
+                    </a>
+
+                    <a href="/user/cart">
+                        Back to Cart
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

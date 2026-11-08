@@ -1,0 +1,93 @@
+
+.admin-dashboard {
+    min-height: 600px;
+    padding: 25px 8% 60px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+.admin-message {
+    padding: 15px 18px;
+    margin-bottom: 20px;
+    background: #d1f0df;
+    color: #155b40;
+    border: 1px solid #a5d9bd;
+    border-radius: 7px;
+}
+
+.admin-welcome h1 {
+    color: #24365b;
+    font-size: 34px;
+    margin: 15px 0 5px;
+}
+
+.admin-welcome p {
+    color: #52617a;
+    font-size: 17px;
+    margin-bottom: 27px;
+}
+
+.admin-dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.admin-card {
+    background: #ffffff;
+    padding: 35px 20px 27px;
+    text-align: center;
+    text-decoration: none;
+    color: #263653;
+    border-radius: 16px;
+    min-height: 130px;
+    box-shadow: 0 4px 12px rgba(40, 45, 80, 0.10);
+    transition: 0.3s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(40, 45, 80, 0.16);
+}
+
+.admin-card-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.admin-card h2 {
+    font-size: 21px;
+    font-weight: 500;
+    margin: 5px 0 10px;
+}
+
+.admin-card p {
+    color: #788397;
+    font-size: 16px;
+    margin: 0;
+}
+
+@media (max-width: 850px) {
+    .admin-dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .admin-dashboard {
+        padding: 25px 15px 40px;
+    }
+
+    .admin-welcome h1 {
+        font-size: 27px;
+    }
+
+    .admin-dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+}

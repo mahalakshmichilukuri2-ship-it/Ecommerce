@@ -1,0 +1,116 @@
+/* Admin Signup Page */
+
+.admin-signup-page {
+    min-height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* Signup Card */
+
+.admin-signup-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px 35px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(18, 91, 83, 0.12);
+    text-align: center;
+}
+
+.signup-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.admin-signup-card h2 {
+    color: #174c49;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.admin-signup-card .subtitle {
+    color: #52736e;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+/* Form */
+
+.admin-signup-card form {
+    text-align: left;
+}
+
+.admin-signup-card label {
+    display: block;
+    color: #174c49;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.admin-signup-card input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #b8dcd4;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 22px;
+    transition: 0.3s;
+}
+
+.admin-signup-card input:focus {
+    border-color: #087f70;
+    box-shadow: 0 0 0 3px rgba(8, 127, 112, 0.12);
+}
+
+/* Button */
+
+.admin-signup-card button {
+    width: 100%;
+    padding: 13px;
+    background: #087f70;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-signup-card button:hover {
+    background: #125b53;
+    transform: translateY(-2px);
+}
+
+/* Flash Messages */
+
+.admin-signup-card .alert {
+    padding: 11px;
+    border-radius: 7px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+/* Responsive */
+
+@media (max-width: 500px) {
+    .admin-signup-card {
+        padding: 30px 22px;
+    }
+
+    .admin-signup-card h2 {
+        font-size: 24px;
+    }
+}

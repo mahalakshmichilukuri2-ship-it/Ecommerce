@@ -1,0 +1,118 @@
+/* Verify OTP Page */
+
+.auth-page {
+    min-height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* OTP Card */
+
+.auth-container {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    padding: 40px 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(18, 91, 83, 0.12);
+    text-align: center;
+}
+
+.otp-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.auth-container h2 {
+    color: #174c49;
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.auth-container .subtitle {
+    color: #52736e;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+/* OTP Form */
+
+.auth-container form {
+    text-align: left;
+}
+
+.auth-container label {
+    display: block;
+    color: #174c49;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.auth-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #b8dcd4;
+    border-radius: 8px;
+    outline: none;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 6px;
+    margin-bottom: 22px;
+}
+
+.auth-container input:focus {
+    border-color: #087f70;
+    box-shadow: 0 0 0 3px rgba(8, 127, 112, 0.12);
+}
+
+/* Verify Button */
+
+.auth-container button {
+    width: 100%;
+    padding: 13px;
+    background: #087f70;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.auth-container button:hover {
+    background: #125b53;
+    transform: translateY(-2px);
+}
+
+/* Flash Messages */
+
+.auth-container .alert {
+    padding: 11px;
+    border-radius: 7px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 500px) {
+    .auth-container {
+        padding: 30px 22px;
+    }
+
+    .auth-container h2 {
+        font-size: 24px;
+    }
+}

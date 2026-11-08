@@ -1,0 +1,314 @@
+
+/* =================================
+   SMARTCART USER LOGIN PAGE
+   TEAL + MINT THEME
+================================= */
+
+/* Login Background */
+
+.login-page {
+    width: 100%;
+    min-height: 660px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 20px;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* Login Card */
+
+.login-page .login-card {
+    width: 540px;
+    max-width: 100%;
+
+    padding: 35px 30px;
+
+    background: #ffffff;
+
+    border-radius: 17px;
+
+    box-shadow: 0 12px 28px rgba(20, 100, 90, 0.15);
+}
+
+/* Heading */
+
+.login-page .login-card h2 {
+    text-align: center;
+
+    color: #174c49;
+
+    font-size: 30px;
+    font-weight: 600;
+
+    margin-bottom: 32px;
+}
+
+/* Form Groups */
+
+.login-page .form-group {
+    margin-bottom: 23px;
+}
+
+/* Labels */
+
+.login-page .form-group label {
+    display: block;
+
+    color: #285d58;
+
+    font-size: 16px;
+
+    margin-bottom: 10px;
+}
+
+/* Input Fields */
+
+.login-page .form-group input {
+    width: 100%;
+    height: 45px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #c9e5dc;
+    border-radius: 8px;
+
+    background: #fbfffd;
+
+    font-size: 15px;
+
+    outline: none;
+    transition: 0.3s;
+}
+
+.login-page .form-group input:focus {
+    border-color: #079b85;
+
+    box-shadow: 0 0 0 3px rgba(7, 155, 133, 0.12);
+}
+
+/* Forgot Password */
+
+.login-page .forgot-password {
+    text-align: right;
+    margin-bottom: 25px;
+}
+
+.login-page .forgot-password a {
+    color: #078b79;
+
+    font-size: 14px;
+
+    text-decoration: none;
+}
+
+.login-page .forgot-password a:hover {
+    color: #045d52;
+    text-decoration: underline;
+}
+
+/* Login Button */
+
+.login-page .login-btn {
+    width: 100%;
+    height: 45px;
+
+    background: #079b85;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-page .login-btn:hover {
+    background: #067968;
+}
+
+/* Register Text */
+
+.login-page .register-text {
+    text-align: center;
+
+    color: #285d58;
+
+    font-size: 16px;
+
+    margin-top: 24px;
+    margin-bottom: 0;
+}
+
+.login-page .register-text a {
+    color: #078b79;
+
+    margin-left: 5px;
+
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.login-page .register-text a:hover {
+    color: #045d52;
+}
+
+/* Flash Messages */
+
+.login-page .login-message {
+    padding: 10px;
+    margin-bottom: 15px;
+
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.login-page .login-message.success {
+    background: #d9f5e9;
+    color: #08734f;
+}
+
+.login-page .login-message.error,
+.login-page .login-message.danger {
+    background: #ffe3e3;
+    color: #b42318;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 600px) {
+
+    .login-page {
+        min-height: 550px;
+        padding: 30px 15px;
+    }
+
+    .login-page .login-card {
+        padding: 28px 20px;
+    }
+
+    .login-page .login-card h2 {
+        font-size: 26px;
+    }
+
+}
+
+
+
+
+
+/* =================================
+   SMARTCART CART - RESPONSIVE DESIGN
+================================= */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .cart-page {
+        padding: 25px 12px 35px;
+    }
+
+    .cart-container {
+        width: 100%;
+    }
+
+    .cart-heading {
+        font-size: 27px;
+        text-align: center;
+    }
+
+    .cart-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .cart-table {
+        min-width: 700px;
+    }
+
+    .cart-summary {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cart-total-info,
+    .cart-summary-actions {
+        width: 100%;
+    }
+
+    .cart-summary-actions {
+        justify-content: center;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .cart-page {
+        padding: 20px 10px;
+    }
+
+    .cart-heading {
+        font-size: 23px;
+        margin-bottom: 18px;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        padding: 9px 8px;
+        font-size: 13px;
+    }
+
+    .cart-product-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .quantity-controls {
+        gap: 7px;
+    }
+
+    .quantity-btn {
+        width: 27px;
+        height: 27px;
+    }
+
+    .remove-btn {
+        padding: 6px 9px;
+        font-size: 12px;
+    }
+
+    .cart-summary {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .cart-total-info h3 {
+        font-size: 19px;
+    }
+
+    .cart-summary-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cart-summary-actions a {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .empty-cart {
+        padding: 35px 15px;
+    }
+}
+

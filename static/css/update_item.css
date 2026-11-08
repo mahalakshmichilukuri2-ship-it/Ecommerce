@@ -1,0 +1,166 @@
+.update-product-page {
+    width: 100%;
+    min-height: 650px;
+    padding: 35px 20px 60px;
+    box-sizing: border-box;
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+.update-product-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 22px rgba(20, 100, 90, 0.13);
+}
+
+.update-product-container h2 {
+    text-align: center;
+    color: #174c49;
+    font-size: 28px;
+    margin: 0 0 28px;
+}
+
+.update-form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.update-form-group label {
+    color: #285d58;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.update-form-group input[type="text"],
+.update-form-group input[type="number"],
+.update-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #b7dcd4;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #174c49;
+    outline: none;
+}
+
+.update-form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.update-form-group input:focus,
+.update-form-group textarea:focus {
+    border-color: #087f70;
+    box-shadow: 0 0 5px rgba(8, 127, 112, 0.2);
+}
+
+.update-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.old-product-image {
+    width: 130px;
+    height: 150px;
+    object-fit: contain;
+    border: 1px solid #d1e9e3;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.update-form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #b7dcd4;
+    border-radius: 8px;
+}
+
+.update-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.update-buttons button {
+    padding: 12px 22px;
+    background: #087f70;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.update-buttons button:hover {
+    background: #125b53;
+}
+
+.update-buttons a {
+    padding: 11px 18px;
+    color: #087f70;
+    border: 1px solid #087f70;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.update-buttons a:hover {
+    background: #e0f7f4;
+}
+
+.update-message {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.update-message.success {
+    background: #d1f5e8;
+    color: #125b53;
+}
+
+.update-message.danger {
+    background: #ffe5e5;
+    color: #a12626;
+}
+
+@media (max-width: 600px) {
+    .update-product-page {
+        padding: 25px 10px;
+    }
+
+    .update-product-container {
+        width: 100%;
+        padding: 22px 17px;
+    }
+
+    .update-form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .update-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .update-buttons button,
+    .update-buttons a {
+        text-align: center;
+    }
+}

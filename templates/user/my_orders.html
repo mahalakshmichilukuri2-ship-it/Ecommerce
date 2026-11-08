@@ -1,0 +1,105 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Orders | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/my_orders.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="orders-page">
+
+    <div class="orders-container">
+
+        <h2 class="orders-heading">📦 My Orders</h2>
+
+        {% if orders|length == 0 %}
+
+            <!-- Empty Orders -->
+
+            <div class="empty-orders">
+
+                <div class="empty-icon">🛍️</div>
+
+                <h3>You have not placed any orders yet.</h3>
+
+                <p>Explore our products and start shopping!</p>
+
+                <a href="/user/products" class="shopping-btn">
+                    Start Shopping
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <!-- Order Cards -->
+
+            <div class="orders-list">
+
+                {% for order in orders %}
+
+                <div class="order-card">
+
+                    <h3>Order #{{ order.order_id }}</h3>
+
+                    <div class="order-info">
+
+                        <p>
+                            <strong>Amount:</strong>
+                            ₹{{ order.amount }}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            <span class="order-status">
+                                {{ order.payment_status }}
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Date:</strong>
+                            {{ order.created_at }}
+                        </p>
+
+                    </div>
+
+                    <div class="order-actions">
+
+                        <a href="/user/order-success/{{ order.order_id }}"
+                           class="view-btn">
+                            View Order Details
+                        </a>
+
+                        <a href="/user/download-invoice/{{ order.order_id }}"
+                           class="invoice-btn">
+                            Download Invoice
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        <div class="continue-shopping">
+
+            <a href="/user/products">
+                ← Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

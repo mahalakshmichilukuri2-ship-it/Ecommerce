@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP - SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register_verify_otp.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="register-otp-page">
+
+    <div class="register-otp-card">
+
+        <div class="otp-icon">✉️</div>
+
+        <h2>Verify OTP</h2>
+
+        <p class="subtitle">
+            Verify your email address and create your SmartCart account password.
+        </p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- OTP Verification Form -->
+        <form method="POST" action="/verify-otp">
+
+            <label for="otp">Enter OTP</label>
+            <input
+                type="text"
+                id="otp"
+                name="otp"
+                placeholder="Enter 6-digit OTP"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                inputmode="numeric"
+                required
+            >
+
+            <label for="password">Create Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create your password"
+                required
+            >
+
+            <button type="submit">Verify & Register</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

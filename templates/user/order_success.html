@@ -1,0 +1,96 @@
+
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/order_success.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="order-success-page">
+
+    <div class="success-heading">
+        <h1>Your Order is Confirmed!</h1>
+        <p>Thank you for shopping with <strong>SmartCart</strong>.</p>
+    </div>
+
+    <!-- Order and Delivery Details -->
+    <div class="details-grid">
+
+        <div class="info-card">
+            <h2>Order Details</h2>
+
+            <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+            <p><strong>Payment ID:</strong> {{ order.razorpay_payment_id }}</p>
+            <p><strong>Amount Paid:</strong> ₹{{ order.amount }}</p>
+            <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Delivery Details</h2>
+
+            {% if customer is defined and customer %}
+                <p><strong>Name:</strong> {{ customer.full_name }}</p>
+                <p><strong>Email:</strong> {{ customer.email }}</p>
+                <p><strong>Phone:</strong> {{ customer.phone }}</p>
+                <p><strong>Address:</strong> {{ customer.delivery_address }}</p>
+            {% else %}
+                <p>Delivery details are not available.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- Order Summary -->
+    <div class="summary-card">
+
+        <h2>Order Summary</h2>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Price (₹)</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for it in items %}
+                    <tr>
+                        <td>{{ it.product_name }}</td>
+                        <td>{{ it.quantity }}</td>
+                        <td>{{ it.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="success-actions">
+
+        <a href="/user/products" class="btn primary-btn">
+            Continue Shopping
+        </a>
+
+        <a href="/user/my-orders" class="btn secondary-btn">
+            View My Orders
+        </a>
+
+        <a href="/user/download-invoice/{{ order.order_id }}"
+           class="btn secondary-btn">
+            Download Invoice (PDF)
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

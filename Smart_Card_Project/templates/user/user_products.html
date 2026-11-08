@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products</title>
+    <style>
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            padding: 15px;
+        }
+
+        .product-card {
+            width: 260px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            background-color: white;
+            transition: all 0.4s ease;
+        }
+
+        .product-card img {
+            width: 140px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .product-card a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Card Hover */
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: #007bff;
+        }
+
+        /* Image Hover */
+        .product-card img {
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.08);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>All Products</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color:green;">{{ message }}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <!-- Search Bar -->
+    <form method="GET" action="/user/products">
+        <input type="text" name="search" placeholder="Search product..." value="{{ request.args.get('search', '') }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+
+
+
+    <!-- Category Filter -->
+    <form method="GET" action="/user/products">
+
+        <select name="category">
+
+            <option value="">All Categories</option>
+
+            {% for cat in categories %}
+
+            <option value="{{ cat }}" {% if request.args.get('category', '' )==cat %} selected {% endif %}>
+
+                {{ cat }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">Filter</button>
+
+    </form>
+
+
+    <!-- Product Cards -->
+    <div class="product-container">
+
+        {% for product in products %}
+        <div class="product-card">
+
+            <img src="/static/uploads/product_images/{{ product.image }}">
+
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.category }}</p>
+            <p><strong>₹{{ product.price }}</strong></p>
+
+            <a href="/user/product/{{ product.product_id }}">View Details</a><br><br>
+            <a href="/user/product/{{ product.product_id }}">Add to Cart</a>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>

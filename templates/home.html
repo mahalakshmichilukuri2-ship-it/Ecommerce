@@ -1,0 +1,102 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+SmartCart | Online Shopping
+{% endblock %}
+
+{% block content %}
+
+<div class="home-page">
+
+    <main class="home-container">
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+
+            <div class="hero-text">
+
+                <span class="hero-tag">
+                    ✨ Online Shopping Made Easy
+                </span>
+
+                <h1>
+                    Welcome to
+                    <span>SmartCart</span>
+                </h1>
+
+                <p>
+                    Shop smarter, faster and more securely.
+                    Discover your favourite products at amazing prices.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="{{ url_for('user_login') }}"
+                       class="primary-btn">
+                        User Login →
+                    </a>
+
+                    <a href="{{ url_for('user_register') }}"
+                       class="secondary-btn">
+                        Create Account
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="hero-decoration">
+
+                <img
+                    src="{{ url_for('static', filename='images/shopping-illustration.png') }}"
+                    alt="SmartCart shopping illustration">
+
+            </div>
+
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>
+                    Get your favourite products delivered
+                    quickly and safely.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Secure Payments</h3>
+                <p>
+                    Pay safely using UPI, Cards and
+                    Netbanking through Razorpay.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎧</div>
+                <h3>24/7 Support</h3>
+                <p>
+                    We are always here to help you
+                    with your shopping experience.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- Admin Login -->
+        <div class="admin-link">
+            <a href="{{ url_for('admin_login') }}">
+                Admin Login
+            </a>
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,229 @@
+
+/* =========================================
+   SMARTCART - ADDRESS PAGE
+   Original Mint Green & Teal Theme
+========================================= */
+
+.address-page {
+    width: 100%;
+    min-height: 650px;
+    padding: 35px 20px 60px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+/* Address Form Card */
+
+.address-container {
+    width: 90%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px;
+
+    box-sizing: border-box;
+    background: #ffffff;
+
+    border-radius: 17px;
+    box-shadow: 0 6px 18px rgba(20, 100, 90, 0.12);
+}
+
+/* Heading */
+
+.address-container h2 {
+    color: #174c49;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 0 25px;
+}
+
+/* Two Column Form Layout */
+
+.address-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Form Groups */
+
+.address-form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.address-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Labels */
+
+.address-form-group label {
+    color: #285d58;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Inputs and Textarea */
+
+.address-form-group input,
+.address-form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    box-sizing: border-box;
+
+    border: 1px solid #b7dcd4;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #174c49;
+
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    outline: none;
+
+    transition: 0.3s ease;
+}
+
+/* Input Height */
+
+.address-form-group input {
+    height: 48px;
+}
+
+/* Textarea */
+
+.address-form-group textarea {
+    height: 85px;
+    resize: vertical;
+}
+
+/* Placeholder */
+
+.address-form-group input::placeholder,
+.address-form-group textarea::placeholder {
+    color: #829b96;
+}
+
+/* Focus Effect */
+
+.address-form-group input:focus,
+.address-form-group textarea:focus {
+    border-color: #087f70;
+    box-shadow: 0 0 0 3px rgba(8, 127, 112, 0.10);
+}
+
+/* Proceed Button */
+
+.address-container button {
+    padding: 13px 23px;
+    margin-top: 28px;
+
+    background: #087f70;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.address-container button:hover {
+    background: #125b53;
+    transform: translateY(-2px);
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+    .address-container {
+        width: 95%;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .address-page {
+        padding: 25px 12px 40px;
+    }
+
+    .address-container {
+        width: 100%;
+        padding: 22px 17px;
+    }
+
+    .address-container h2 {
+        font-size: 24px;
+    }
+
+    .address-form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .address-form-group.full-width {
+        grid-column: auto;
+    }
+
+    .address-container button {
+        width: 100%;
+    }
+}
+
+/* Back to Cart and Proceed Buttons */
+
+.address-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.back-cart-btn {
+    display: inline-block;
+    padding: 13px 22px;
+
+    background: #ffffff;
+    color: #087f70;
+
+    border: 1px solid #087f70;
+    border-radius: 8px;
+
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+.back-cart-btn:hover {
+    background: #e0f7f4;
+}
+
+.address-actions button {
+    margin-top: 0;
+}
+
+@media (max-width: 600px) {
+    .address-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .back-cart-btn {
+        text-align: center;
+    }
+}

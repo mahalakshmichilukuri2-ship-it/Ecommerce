@@ -1,0 +1,91 @@
+
+{% extends "base.html" %}
+
+{% block title %}User Profile | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/user_profile.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="user-profile-container">
+
+    <div class="user-profile-card">
+
+        <h2>My Profile</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="profile-message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- Profile Image -->
+        <div class="profile-image-section">
+
+            {% if user.profile_image %}
+                <img src="{{ url_for('static', filename='uploads/user_profiles/' + user.profile_image) }}"
+                     alt="Profile Image">
+            {% else %}
+                <p>No Profile Image</p>
+            {% endif %}
+
+        </div>
+
+        <!-- Update Profile Form -->
+        <form method="POST"
+              action="/user/profile"
+              enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text"
+                       name="name"
+                       value="{{ user.name }}"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email"
+                       name="email"
+                       value="{{ user.email }}"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>New Password (optional):</label>
+                <input type="password"
+                       name="password"
+                       placeholder="Leave empty to keep old password">
+            </div>
+
+            <div class="form-group">
+                <label>Upload New Profile Image (optional):</label>
+                <input type="file"
+                       name="profile_image"
+                       accept="image/*">
+            </div>
+
+            <div class="profile-actions">
+
+                <button type="submit" class="update-profile-btn">
+                    Update Profile
+                </button>
+
+                <a href="/user-dashboard" class="back-dashboard-btn">
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

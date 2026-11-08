@@ -1,0 +1,264 @@
+
+/* =================================
+   SMARTCART - MY ORDERS PAGE
+   Original Mint and Teal Theme
+================================= */
+
+.orders-page {
+    width: 100%;
+    min-height: 600px;
+    padding: 35px 20px 50px;
+
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+.orders-container {
+    width: 90%;
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* Page Heading */
+
+.orders-heading {
+    color: #174c49;
+    font-size: 34px;
+    margin-bottom: 25px;
+}
+
+/* Orders List */
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Individual Order Card */
+
+.order-card {
+    width: 100%;
+    padding: 25px 30px;
+
+    background: #ffffff;
+    border: 1px solid #dcece7;
+    border-radius: 15px;
+
+    box-shadow: 0 5px 16px rgba(20, 100, 90, 0.10);
+
+    transition: 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 10px 22px rgba(20, 100, 90, 0.15);
+}
+
+/* Order Heading */
+
+.order-card h3 {
+    color: #087f70;
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+/* Order Information */
+
+.order-info {
+    line-height: 1.8;
+    color: #285d58;
+    font-size: 16px;
+}
+
+.order-info p {
+    margin-bottom: 12px;
+}
+
+.order-info strong {
+    color: #174c49;
+}
+
+/* Payment Status */
+
+.order-status {
+    display: inline-block;
+    padding: 4px 12px;
+
+    background: #d1f5e8;
+    color: #08734f;
+
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Order Buttons */
+
+.order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.view-btn,
+.invoice-btn {
+    display: inline-block;
+    padding: 11px 17px;
+
+    border-radius: 7px;
+    text-decoration: none;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+/* View Order Details */
+
+.view-btn {
+    background: #087f70;
+    color: white;
+}
+
+.view-btn:hover {
+    background: #125b53;
+}
+
+/* Download Invoice */
+
+.invoice-btn {
+    background: #125b53;
+    color: white;
+}
+
+.invoice-btn:hover {
+    background: #087f70;
+}
+
+/* Empty Orders */
+
+.empty-orders {
+    width: 100%;
+    min-height: 260px;
+    padding: 40px 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: #ffffff;
+    border-radius: 15px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 16px rgba(20, 100, 90, 0.10);
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.empty-orders h3 {
+    color: #174c49;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.empty-orders p {
+    color: #285d58;
+    font-size: 16px;
+    margin-bottom: 22px;
+}
+
+/* Start Shopping Button */
+
+.shopping-btn {
+    display: inline-block;
+    padding: 12px 22px;
+
+    background: #087f70;
+    color: white;
+
+    text-decoration: none;
+    border-radius: 7px;
+
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.shopping-btn:hover {
+    background: #125b53;
+}
+
+/* Continue Shopping */
+
+.continue-shopping {
+    margin-top: 25px;
+}
+
+.continue-shopping a {
+    color: #087f70;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.continue-shopping a:hover {
+    color: #125b53;
+    text-decoration: underline;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+
+    .orders-container {
+        width: 95%;
+    }
+
+    .orders-heading {
+        font-size: 29px;
+    }
+
+    .order-card {
+        padding: 22px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+    .orders-page {
+        padding: 25px 10px;
+    }
+
+    .orders-heading {
+        font-size: 25px;
+    }
+
+    .order-card h3 {
+        font-size: 19px;
+    }
+
+    .order-actions {
+        flex-direction: column;
+    }
+
+    .order-actions a {
+        text-align: center;
+    }
+
+    .empty-orders h3 {
+        font-size: 19px;
+    }
+}

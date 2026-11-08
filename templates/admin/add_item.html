@@ -1,0 +1,94 @@
+
+{% extends "base.html" %}
+
+{% block title %}Add Product | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/add_item.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="add-product-page">
+
+    <div class="add-product-container">
+
+        <h2>Add New Product</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="product-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST"
+              action="/admin/add-item"
+              enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text"
+                       name="name"
+                       placeholder="Enter product name"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description"
+                          placeholder="Enter product description"
+                          required></textarea>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text"
+                           name="category"
+                           placeholder="Enter category"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label>Price (₹)</label>
+                    <input type="number"
+                           step="0.01"
+                           name="price"
+                           placeholder="Enter price"
+                           required>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>Product Image</label>
+                <input type="file"
+                       name="image"
+                       accept="image/*"
+                       required>
+            </div>
+
+            <div class="form-buttons">
+
+                <button type="submit" class="add-btn">
+                    Add Product
+                </button>
+
+                <a href="/admin-dashboard" class="back-btn">
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

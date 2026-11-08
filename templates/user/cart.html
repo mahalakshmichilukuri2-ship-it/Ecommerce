@@ -1,0 +1,231 @@
+
+{% extends "base.html" %}
+
+{% block title %}Your Cart | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/user_cart.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="cart-page">
+
+    <div class="cart-container">
+
+        <h2 class="cart-heading">🛒 Your Cart</h2>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="cart-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        {% if not cart %}
+
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🛍️</div>
+                <h3>Your cart is empty.</h3>
+                <p>Looks like you haven't added anything yet!</p>
+
+                <a href="/user/products" class="shop-now-btn">
+                    Shop Now
+                </a>
+            </div>
+
+        {% else %}
+
+            <!-- IMPORTANT: Selection Form Starts Here -->
+            <form method="POST" action="/user/select-cart-items">
+
+                <!-- Cart Table -->
+                <div class="cart-table-wrapper">
+
+                    <table class="cart-table">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox"
+                                           id="select-all"
+                                           onchange="toggleAll(this)">
+                                    All
+                                </th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for pid, item in cart.items() %}
+
+                            <tr>
+
+                                <td>
+                                    <input type="checkbox"
+                                           class="product-check"
+                                           name="selected_products"
+                                           value="{{ pid }}"
+                                           onchange="calculateTotal()">
+                                </td>
+
+                                <td>
+                                    <img
+                                        src="{{ url_for('static', filename='uploads/product_images/' + item.image) }}"
+                                        class="cart-product-image"
+                                        alt="{{ item.name }}">
+                                </td>
+
+                                <td class="cart-product-name">
+                                    {{ item.name }}
+                                </td>
+
+                                <td>
+                                    ₹{{ item.price }}
+                                </td>
+
+                                <td>
+                                    <div class="quantity-controls">
+
+                                        <a href="/user/cart/decrease/{{ pid }}"
+                                           class="quantity-btn">−</a>
+
+                                        <span>{{ item.quantity }}</span>
+
+                                        <a href="/user/cart/increase/{{ pid }}"
+                                           class="quantity-btn">+</a>
+
+                                    </div>
+                                </td>
+
+                                <td class="item-total">
+                                    ₹{{ item.price * item.quantity }}
+                                </td>
+
+                                <td>
+                                    <a href="/user/cart/remove/{{ pid }}"
+                                       class="remove-btn">
+                                        Remove
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+
+                    <div class="cart-total-info">
+
+                        <h3>
+                            Selected Products Total:
+                            ₹<span id="grand-total">0.00</span>
+                        </h3>
+
+                        <p>
+                            Complete Cart Total:
+                            ₹<span id="complete-total">
+                                {% set ns = namespace(total=0) %}
+                                {% for item in cart.values() %}
+                                    {% set ns.total = ns.total + (item.price|float * item.quantity|int) %}
+                                {% endfor %}
+                                {{ "%.2f"|format(ns.total) }}
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <div class="cart-summary-actions">
+
+                        <a href="/user/products"
+                           class="continue-shopping-btn">
+                            Continue Shopping
+                        </a>
+
+                        <!-- Proceed submits selected product IDs -->
+                        <button type="submit" class="proceed-btn">
+                            Proceed
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+            <!-- Selection Form Ends Here -->
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+    function calculateTotal() {
+
+        let checkboxes = document.querySelectorAll(".product-check");
+        let grandTotal = 0;
+
+        checkboxes.forEach(function (checkbox) {
+
+            if (checkbox.checked) {
+
+                let row = checkbox.closest("tr");
+                let itemTotal = row.querySelector(".item-total");
+
+                let total = parseFloat(
+                    itemTotal.innerText.replace("₹", "").replace(/,/g, "")
+                );
+
+                grandTotal += total;
+
+            }
+
+        });
+
+        document.getElementById("grand-total").innerText =
+            grandTotal.toFixed(2);
+
+        let allCheckboxes = document.querySelectorAll(".product-check");
+        let checkedCheckboxes = document.querySelectorAll(".product-check:checked");
+
+        document.getElementById("select-all").checked =
+            allCheckboxes.length > 0 &&
+            allCheckboxes.length === checkedCheckboxes.length;
+    }
+
+    function toggleAll(selectAllCheckbox) {
+
+        let checkboxes = document.querySelectorAll(".product-check");
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+
+        calculateTotal();
+    }
+
+</script>
+
+{% endblock %}

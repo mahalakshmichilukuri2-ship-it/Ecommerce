@@ -1,0 +1,128 @@
+.admin-product-details-page {
+    width: 100%;
+    min-height: 650px;
+    padding: 40px 25px;
+    box-sizing: border-box;
+    background: linear-gradient(
+        135deg,
+        #e0f7f4,
+        #d1f5e8,
+        #e8faf5
+    );
+}
+
+.admin-product-details-card {
+    width: 95%;
+    max-width: 1500px;
+    min-height: 430px;
+    margin: auto;
+    padding: 40px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 22px rgba(20, 100, 90, 0.12);
+}
+
+.admin-product-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-product-image img {
+    width: 100%;
+    max-width: 450px;
+    height: 350px;
+    object-fit: contain;
+}
+
+.admin-product-info h1 {
+    color: #174c49;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.admin-product-category {
+    display: inline-block;
+    padding: 9px 18px;
+    background: #d1f5e8;
+    color: #087f70;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.admin-product-price {
+    color: #087f70;
+    font-size: 30px;
+    margin: 25px 0;
+}
+
+.admin-product-description {
+    color: #285d58;
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.admin-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.admin-update-btn {
+    padding: 14px 25px;
+    background: #087f70;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-update-btn:hover {
+    background: #125b53;
+}
+
+.admin-back-btn {
+    padding: 13px 22px;
+    color: #087f70;
+    border: 1px solid #087f70;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-back-btn:hover {
+    background: #e0f7f4;
+}
+
+@media (max-width: 768px) {
+    .admin-product-details-card {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 22px;
+    }
+
+    .admin-product-image img {
+        height: 260px;
+    }
+
+    .admin-product-info h1 {
+        font-size: 26px;
+    }
+
+    .admin-product-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-product-actions a {
+        text-align: center;
+    }
+}

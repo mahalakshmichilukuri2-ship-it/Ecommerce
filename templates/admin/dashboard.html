@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | SmartCart{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="admin-message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Welcome Section -->
+    <div class="admin-welcome">
+        <h1>Welcome, {{ admin_name }}</h1>
+        <p>This is your admin dashboard.</p>
+    </div>
+
+    <!-- Dashboard Cards -->
+    <div class="admin-dashboard-cards">
+
+        <a href="/admin/add-item" class="admin-card">
+            <div class="admin-card-icon">➕</div>
+            <h2>Add Product</h2>
+            <p>Add a new product</p>
+        </a>
+
+        <a href="/admin/item-list" class="admin-card">
+            <div class="admin-card-icon">📋</div>
+            <h2>View All Products</h2>
+            <p>View, update or delete</p>
+        </a>
+
+        <a href="/admin/profile" class="admin-card">
+            <div class="admin-card-icon">👤</div>
+            <h2>View Profile</h2>
+            <p>Edit your details</p>
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
