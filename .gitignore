@@ -1,6 +1,14 @@
 .env
 venv/
+.venv/
 __pycache__/
 *.pyc
+database.db
+*.db
+.vscode/
 
+!database_demo.db
 
+check_db.py
+test_mysql.py
+migrate_db.py

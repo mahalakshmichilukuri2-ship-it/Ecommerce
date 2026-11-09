@@ -50,7 +50,17 @@
             ☰
         </button>
 
-        {% if session.get('admin_id') %}
+        {% if request.endpoint == 'home' %}
+
+        <!-- PUBLIC NAVBAR -->
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/user-login">User Login</a>
+            <a href="/user-register">Register</a>
+            <a href="/admin-login">Admin Login</a>
+        </div>
+
+        {% elif session.get('admin_id') %}
 
         <div class="nav-links admin-links">
             <a href="/admin-dashboard">Dashboard</a>

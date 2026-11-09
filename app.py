@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, redirect, session, flash,url_for
 from flask_mail import Mail, Message
-import mysql.connector
+from werkzeug.security import generate_password_hash
+import traceback
 import bcrypt
 import random
 import config
 import os
 import razorpay
 import secrets
+import sqlite3
 from werkzeug.utils import secure_filename
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
@@ -37,13 +39,19 @@ mail = Mail(app)
 # DATABASE CONNECTION
 # =========================================================
 
+
 def get_db_connection():
-    return mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME
-    )
+    print("DATABASE USED:", config.DATABASE_PATH)
+
+    conn = sqlite3.connect(config.DATABASE_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+# HOME PAGE
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 
 # =========================================================
@@ -76,9 +84,6 @@ os.makedirs(ADMIN_UPLOAD_FOLDER, exist_ok=True)
 # ROUTE 1: ADMIN SIGNUP - SEND OTP
 # =========================================================
 
-@app.route('/')
-def home():
-    return render_template('home.html')
 
 @app.route('/admin-signup', methods=['GET', 'POST'])
 def admin_signup():
@@ -90,10 +95,10 @@ def admin_signup():
     email = request.form['email']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT admin_id FROM admin WHERE email=%s",
+        "SELECT admin_id FROM admin WHERE email=?",
         (email,)
     )
 
@@ -127,6 +132,7 @@ def admin_signup():
     return redirect('/verify-otp')
 
 
+
 # =========================================================
 # ROUTE 2: DISPLAY OTP PAGE
 # =========================================================
@@ -140,6 +146,7 @@ def verify_otp_get():
 # =========================================================
 # ROUTE 3: VERIFY OTP AND SAVE ADMIN
 # =========================================================
+
 
 @app.route('/verify-otp', methods=['POST'])
 def verify_otp_post():
@@ -162,7 +169,7 @@ def verify_otp_post():
     cursor.execute(
         """
         INSERT INTO admin (name, email, password)
-        VALUES (%s, %s, %s)
+        VALUES (?, ?, ?)
         """,
         (
             session['signup_name'],
@@ -185,6 +192,8 @@ def verify_otp_post():
     return redirect('/admin-signup')
 
 
+
+
 # =========================================================
 # ROUTE 4: ADMIN LOGIN
 # =========================================================
@@ -199,10 +208,10 @@ def admin_login():
     password = request.form['password']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM admin WHERE email=%s",
+        "SELECT * FROM admin WHERE email=?",
         (email,)
     )
 
@@ -234,6 +243,7 @@ def admin_login():
     flash("Login Successful!", "success")
 
     return redirect('/admin-dashboard')
+
 
 
 # =========================================================
@@ -287,6 +297,7 @@ def add_item_page():
 # ROUTE 8: ADD PRODUCT WITH ADMIN FOREIGN KEY
 # =========================================================
 
+
 @app.route('/admin/add-item', methods=['POST'])
 def add_item():
 
@@ -317,13 +328,11 @@ def add_item():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Store logged-in admin ID as foreign key
-
     cursor.execute(
         """
         INSERT INTO products
         (admin_id, name, description, category, price, image)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             session['admin_id'],
@@ -345,6 +354,8 @@ def add_item():
     return redirect('/admin/item-list')
 
 
+
+
 # =========================================================
 # ROUTE 9: PRODUCT LIST WITH SEARCH AND CATEGORY FILTER
 # =========================================================
@@ -360,9 +371,9 @@ def item_list():
     category_filter = request.args.get('category', '').strip()
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    # Fetch category names as strings
+    # Fetch category names
 
     cursor.execute(
         """
@@ -388,13 +399,13 @@ def item_list():
     # Search functionality
 
     if search:
-        query += " AND name LIKE %s"
+        query += " AND name LIKE ?"
         params.append("%" + search + "%")
 
     # Category filter
 
     if category_filter:
-        query += " AND category = %s"
+        query += " AND category = ?"
         params.append(category_filter)
 
     query += " ORDER BY product_id ASC"
@@ -406,7 +417,7 @@ def item_list():
     cursor.close()
     conn.close()
 
-    # Debug information in terminal
+    # Debug information
 
     print("Admin ID:", session['admin_id'])
     print("Categories:", categories)
@@ -419,9 +430,11 @@ def item_list():
     )
 
 
+
 # =========================================================
 # ROUTE 10: VIEW SINGLE PRODUCT
 # =========================================================
+
 
 @app.route('/admin/view-item/<int:item_id>')
 def view_item(item_id):
@@ -431,10 +444,10 @@ def view_item(item_id):
         return redirect('/admin-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM products WHERE product_id = %s",
+        "SELECT * FROM products WHERE product_id = ?",
         (item_id,)
     )
 
@@ -453,6 +466,8 @@ def view_item(item_id):
     )
 
 
+
+
 # =========================================================
 # ROUTE 11: SHOW UPDATE PRODUCT FORM
 # =========================================================
@@ -465,10 +480,10 @@ def update_item_page(item_id):
         return redirect('/admin-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM products WHERE product_id = %s",
+        "SELECT * FROM products WHERE product_id = ?",
         (item_id,)
     )
 
@@ -485,6 +500,8 @@ def update_item_page(item_id):
         "admin/update_item.html",
         product=product
     )
+
+
 
 
 # =========================================================
@@ -506,10 +523,10 @@ def update_item(item_id):
     new_image = request.files.get('image')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM products WHERE product_id = %s",
+        "SELECT * FROM products WHERE product_id = ?",
         (item_id,)
     )
 
@@ -548,7 +565,7 @@ def update_item(item_id):
                 """
                 SELECT COUNT(*) AS total
                 FROM products
-                WHERE image=%s AND product_id != %s
+                WHERE image=? AND product_id != ?
                 """,
                 (old_image_name, item_id)
             )
@@ -569,12 +586,12 @@ def update_item(item_id):
     cursor.execute(
         """
         UPDATE products
-        SET name=%s,
-            description=%s,
-            category=%s,
-            price=%s,
-            image=%s
-        WHERE product_id=%s
+        SET name=?,
+            description=?,
+            category=?,
+            price=?,
+            image=?
+        WHERE product_id=?
         """,
         (
             name,
@@ -596,6 +613,8 @@ def update_item(item_id):
     return redirect('/admin/item-list')
 
 
+
+
 # =========================================================
 # ROUTE 13: DELETE PRODUCT
 # =========================================================
@@ -608,10 +627,10 @@ def delete_item(item_id):
         return redirect('/admin-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT image FROM products WHERE product_id=%s",
+        "SELECT image FROM products WHERE product_id=?",
         (item_id,)
     )
 
@@ -627,7 +646,7 @@ def delete_item(item_id):
     image_name = product['image']
 
     cursor.execute(
-        "DELETE FROM products WHERE product_id=%s",
+        "DELETE FROM products WHERE product_id=?",
         (item_id,)
     )
 
@@ -636,7 +655,7 @@ def delete_item(item_id):
     # Delete image only if no other product uses it
 
     cursor.execute(
-        "SELECT COUNT(*) AS total FROM products WHERE image=%s",
+        "SELECT COUNT(*) AS total FROM products WHERE image=?",
         (image_name,)
     )
 
@@ -660,6 +679,8 @@ def delete_item(item_id):
     return redirect('/admin/item-list')
 
 
+
+
 # =========================================================
 # ROUTE 14: SHOW ADMIN PROFILE
 # =========================================================
@@ -674,10 +695,10 @@ def admin_profile():
     admin_id = session['admin_id']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM admin WHERE admin_id = %s",
+        "SELECT * FROM admin WHERE admin_id = ?",
         (admin_id,)
     )
 
@@ -690,6 +711,8 @@ def admin_profile():
         "admin/admin_profile.html",
         admin=admin
     )
+
+
 
 
 # =========================================================
@@ -712,10 +735,10 @@ def admin_profile_update():
     new_image = request.files.get('profile_image')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM admin WHERE admin_id = %s",
+        "SELECT * FROM admin WHERE admin_id = ?",
         (admin_id,)
     )
 
@@ -773,11 +796,11 @@ def admin_profile_update():
     cursor.execute(
         """
         UPDATE admin
-        SET name=%s,
-            email=%s,
-            password=%s,
-            profile_image=%s
-        WHERE admin_id=%s
+        SET name=?,
+            email=?,
+            password=?,
+            profile_image=?
+        WHERE admin_id=?
         """,
         (
             name,
@@ -801,6 +824,7 @@ def admin_profile_update():
     return redirect('/admin/profile')
 
 
+
 # =========================================================
 # ROUTE 16: FORGOT PASSWORD - SEND OTP
 # =========================================================
@@ -814,10 +838,10 @@ def forgot_password():
     email = request.form['email'].strip()
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT admin_id FROM admin WHERE email=%s",
+        "SELECT admin_id FROM admin WHERE email=?",
         (email,)
     )
 
@@ -848,14 +872,14 @@ def forgot_password():
         INSERT INTO password_resets
         (email, otp_hash, expires_at, attempts)
         VALUES (
-            %s,
-            %s,
-            DATE_ADD(UTC_TIMESTAMP(), INTERVAL 5 MINUTE),
+            ?,
+            ?,
+            datetime('now', '+5 minutes'),
             0
         )
-        ON DUPLICATE KEY UPDATE
-            otp_hash = VALUES(otp_hash),
-            expires_at = VALUES(expires_at),
+        ON CONFLICT(email) DO UPDATE SET
+            otp_hash = excluded.otp_hash,
+            expires_at = excluded.expires_at,
             attempts = 0
         """,
         (email, otp_hash)
@@ -888,6 +912,8 @@ Do not share this OTP with anyone.
     return redirect('/reset-password')
 
 
+
+
 # =========================================================
 # ROUTE 17: VERIFY OTP AND RESET PASSWORD
 # =========================================================
@@ -902,23 +928,17 @@ def reset_password():
         return redirect('/forgot-password')
 
     if request.method == 'GET':
-
         return render_template(
             'admin/reset_password.html',
             email=email
         )
 
-    otp = request.form.get('otp','').strip()
-    new_password = request.form.get('new_password','')
-    confirm_password = request.form.get('confirm_password','')
-
-    print("FORM DATA:", request.form)
-    print("OTP:", bool(otp))
-    print("NEW PASSWORD:", bool(new_password))
-    print("CONFIRM PASSWORD:", bool(confirm_password))
+    otp = request.form.get('otp', '').strip()
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
 
     if not otp or not new_password or not confirm_password:
-        flash("Please fill in all fields!","danger")
+        flash("Please fill in all fields!", "danger")
         return redirect(url_for('reset_password'))
 
     if len(new_password) < 8:
@@ -933,14 +953,16 @@ def reset_password():
         return redirect('/reset-password')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
         """
-        SELECT otp_hash, attempts,
-        (expires_at > UTC_TIMESTAMP()) AS active
+        SELECT
+            otp_hash,
+            attempts,
+            (expires_at > datetime('now')) AS active
         FROM password_resets
-        WHERE email=%s
+        WHERE email=?
         """,
         (email,)
     )
@@ -948,43 +970,36 @@ def reset_password():
     reset_data = cursor.fetchone()
 
     if not reset_data:
-
         cursor.close()
         conn.close()
 
         session.pop('reset_email', None)
 
         flash("Please request a new OTP!", "danger")
-
         return redirect('/forgot-password')
 
     if not reset_data['active']:
-
         cursor.execute(
-            "DELETE FROM password_resets WHERE email=%s",
+            "DELETE FROM password_resets WHERE email=?",
             (email,)
         )
 
         conn.commit()
-
         cursor.close()
         conn.close()
 
         session.pop('reset_email', None)
 
         flash("OTP expired! Please request a new OTP.", "danger")
-
         return redirect('/forgot-password')
 
     if reset_data['attempts'] >= 5:
-
         cursor.execute(
-            "DELETE FROM password_resets WHERE email=%s",
+            "DELETE FROM password_resets WHERE email=?",
             (email,)
         )
 
         conn.commit()
-
         cursor.close()
         conn.close()
 
@@ -994,7 +1009,6 @@ def reset_password():
             "Maximum attempts reached. Request a new OTP.",
             "danger"
         )
-
         return redirect('/forgot-password')
 
     stored_hash = reset_data['otp_hash']
@@ -1013,14 +1027,12 @@ def reset_password():
         attempts = reset_data['attempts'] + 1
 
         if attempts >= 5:
-
             cursor.execute(
-                "DELETE FROM password_resets WHERE email=%s",
+                "DELETE FROM password_resets WHERE email=?",
                 (email,)
             )
 
             conn.commit()
-
             cursor.close()
             conn.close()
 
@@ -1030,25 +1042,22 @@ def reset_password():
                 "Maximum attempts reached. Request a new OTP.",
                 "danger"
             )
-
             return redirect('/forgot-password')
 
         cursor.execute(
             """
             UPDATE password_resets
-            SET attempts=%s
-            WHERE email=%s
+            SET attempts=?
+            WHERE email=?
             """,
             (attempts, email)
         )
 
         conn.commit()
-
         cursor.close()
         conn.close()
 
         flash("Invalid OTP! Please try again.", "danger")
-
         return redirect('/reset-password')
 
     # Hash new password
@@ -1061,14 +1070,14 @@ def reset_password():
     cursor.execute(
         """
         UPDATE admin
-        SET password=%s
-        WHERE email=%s
+        SET password=?
+        WHERE email=?
         """,
         (hashed_password, email)
     )
 
     cursor.execute(
-        "DELETE FROM password_resets WHERE email=%s",
+        "DELETE FROM password_resets WHERE email=?",
         (email,)
     )
 
@@ -1087,6 +1096,7 @@ def reset_password():
     return redirect('/admin-login')
 
 
+
 # =========================================================
 # ROUTE 18: USER REGISTRATION
 # =========================================================
@@ -1102,10 +1112,10 @@ def user_register():
     password = request.form['password']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
+        "SELECT * FROM users WHERE email=?",
         (email,)
     )
 
@@ -1128,7 +1138,7 @@ def user_register():
     cursor.execute(
         """
         INSERT INTO users (name, email, password)
-        VALUES (%s, %s, %s)
+        VALUES (?, ?, ?)
         """,
         (name, email, hashed_password)
     )
@@ -1141,6 +1151,7 @@ def user_register():
     flash("Registration successful! Please login.", "success")
 
     return redirect('/user-login')
+
 
 
 # =========================================================
@@ -1157,10 +1168,10 @@ def user_login():
     password = request.form['password']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
+        "SELECT * FROM users WHERE email=?",
         (email,)
     )
 
@@ -1178,6 +1189,9 @@ def user_login():
     if isinstance(stored_password, str):
         stored_password = stored_password.encode('utf-8')
 
+    elif isinstance(stored_password, bytearray):
+        stored_password = bytes(stored_password)
+
     if not bcrypt.checkpw(
         password.encode('utf-8'),
         stored_password
@@ -1192,6 +1206,7 @@ def user_login():
     flash("Login successful!", "success")
 
     return redirect('/user-dashboard')
+
 
 
 # =========================================================
@@ -1227,6 +1242,7 @@ def user_logout():
     return redirect('/user-login')
 
 
+
 # =========================================================
 # ROUTE 22: USER PRODUCT LIST WITH SEARCH AND FILTER
 # =========================================================
@@ -1242,7 +1258,7 @@ def user_products():
     category_filter = request.args.get('category', '').strip()
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     # Fetch category names as strings
 
@@ -1268,11 +1284,11 @@ def user_products():
     params = []
 
     if search:
-        query += " AND name LIKE %s"
+        query += " AND name LIKE ?"
         params.append("%" + search + "%")
 
     if category_filter:
-        query += " AND category = %s"
+        query += " AND category = ?"
         params.append(category_filter)
 
     query += " ORDER BY product_id DESC"
@@ -1291,6 +1307,8 @@ def user_products():
     )
 
 
+
+
 # =========================================================
 # ROUTE 23: USER SINGLE PRODUCT DETAILS
 # =========================================================
@@ -1303,10 +1321,10 @@ def user_product_details(product_id):
         return redirect('/user-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM products WHERE product_id = %s",
+        "SELECT * FROM products WHERE product_id = ?",
         (product_id,)
     )
 
@@ -1325,10 +1343,12 @@ def user_product_details(product_id):
     )
 
 
-# ⭐ ROUTE 1: Add to Cart
-# =================================================================
+
+
+# =========================================================
 # ADD ITEM TO CART
-# =================================================================
+# =========================================================
+
 @app.route('/user/add-to-cart/<int:product_id>')
 def add_to_cart(product_id):
 
@@ -1336,7 +1356,7 @@ def add_to_cart(product_id):
         flash("Please login first!", "danger")
         return redirect('/user-login')
 
-    # Create cart if doesn't exist
+    # Create cart if it doesn't exist
     if 'cart' not in session:
         session['cart'] = {}
 
@@ -1344,19 +1364,25 @@ def add_to_cart(product_id):
 
     # Get product
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM products WHERE product_id=%s", (product_id,))
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM products WHERE product_id=?",
+        (product_id,)
+    )
+
     product = cursor.fetchone()
+
     cursor.close()
     conn.close()
 
     if not product:
         flash("Product not found.", "danger")
-        return redirect(request.referrer)
+        return redirect(request.referrer or '/user/products')
 
     pid = str(product_id)
 
-    # If exists → increase quantity
+    # If product exists, increase quantity
     if pid in cart:
         cart[pid]['quantity'] += 1
     else:
@@ -1370,8 +1396,10 @@ def add_to_cart(product_id):
     session['cart'] = cart
 
     flash("Item added to cart!", "success")
-    # return redirect('/user/cart')    instead of this line use below line
-    return redirect(request.referrer)   # ⭐ Return to same page
+
+    # Return to the same page
+    return redirect(request.referrer or '/user/products')
+
 # ⭐ ROUTE 2: View Cart Page
 # =================================================================
 # VIEW CART PAGE
@@ -1385,10 +1413,52 @@ def view_cart():
 
     cart = session.get('cart', {})
 
-    # Calculate total
-    grand_total = sum(item['price'] * item['quantity'] for item in cart.values())
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-    return render_template("user/cart.html", cart=cart, grand_total=grand_total)
+    # Refresh product details and prices from SQLite
+    for pid in list(cart.keys()):
+
+        cursor.execute(
+            """
+            SELECT name, price, image
+            FROM products
+            WHERE product_id = ?
+            """,
+            (pid,)
+        )
+
+        product = cursor.fetchone()
+
+        if product:
+            cart[pid]['name'] = product['name']
+            cart[pid]['price'] = float(product['price'])
+            cart[pid]['image'] = product['image']
+        else:
+            # Remove product if it no longer exists
+            del cart[pid]
+
+    conn.close()
+
+    # Save refreshed cart in session
+    session['cart'] = cart
+
+    # Calculate total using latest prices
+    grand_total = sum(
+        item['price'] * item['quantity']
+        for item in cart.values()
+    )
+
+    return render_template(
+        "user/cart.html",
+        cart=cart,
+        grand_total=grand_total
+    )
+
+
+# =========================================================
+# USER PROFILE
+# =========================================================
 
 @app.route('/user/profile', methods=['GET', 'POST'])
 def user_profile():
@@ -1400,7 +1470,7 @@ def user_profile():
     user_id = session['user_id']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     if request.method == 'POST':
 
@@ -1409,12 +1479,13 @@ def user_profile():
         password = request.form.get('password')
 
         cursor.execute(
-            "SELECT profile_image FROM users WHERE user_id = %s",
+            "SELECT profile_image FROM users WHERE user_id = ?",
             (user_id,)
         )
+
         current_user = cursor.fetchone()
 
-        profile_image = current_user['profile_image']
+        profile_image = current_user['profile_image'] if current_user else None
 
         file = request.files.get('profile_image')
 
@@ -1434,31 +1505,46 @@ def user_profile():
 
             cursor.execute("""
                 UPDATE users
-                SET name=%s, email=%s, password=%s, profile_image=%s
-                WHERE user_id=%s
+                SET name=?, email=?, password=?, profile_image=?
+                WHERE user_id=?
             """, (name, email, hashed_password, profile_image, user_id))
 
         else:
             cursor.execute("""
                 UPDATE users
-                SET name=%s, email=%s, profile_image=%s
-                WHERE user_id=%s
+                SET name=?, email=?, profile_image=?
+                WHERE user_id=?
             """, (name, email, profile_image, user_id))
 
         conn.commit()
+
+        # Update session details
+        session['user_name'] = name
+        session['user_email'] = email
+
         flash("Profile updated successfully!", "success")
 
     cursor.execute(
-        "SELECT * FROM users WHERE user_id = %s",
+        "SELECT * FROM users WHERE user_id = ?",
         (user_id,)
     )
+
     user = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    return render_template('user/user_profile.html', user=user)
+    return render_template(
+        'user/user_profile.html',
+        user=user
+    )
 
+
+
+
+# =========================================================
+# CHECKOUT
+# =========================================================
 
 @app.route('/user/checkout')
 def checkout():
@@ -1482,12 +1568,12 @@ def checkout():
 
     # Get saved delivery address
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT *
         FROM customer_address
-        WHERE user_id = %s
+        WHERE user_id = ?
         ORDER BY address_id DESC
         LIMIT 1
     """, (session['user_id'],))
@@ -1503,6 +1589,7 @@ def checkout():
         grand_total=grand_total,
         customer=customer
     )
+
 
 
 @app.route('/user/select-cart-items', methods=['POST'])
@@ -1600,6 +1687,7 @@ def user_address():
     return render_template('user/address.html')
 
 
+
 # =========================================================
 # SAVE ADDRESS TO DATABASE
 # =========================================================
@@ -1629,7 +1717,7 @@ def save_address():
         INSERT INTO customer_address
         (user_id, full_name, email, phone, door_no,
          delivery_address, city, pincode)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """
 
     cursor.execute(query, (
@@ -1680,12 +1768,12 @@ def confirm_order():
 
     # Get delivery address
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute("""
         SELECT *
         FROM customer_address
-        WHERE user_id = %s
+        WHERE user_id = ?
         ORDER BY address_id DESC
         LIMIT 1
     """, (session['user_id'],))
@@ -1705,6 +1793,7 @@ def confirm_order():
         cart=cart,
         total=total
     )
+
 
 # =================================================================
 # ROUTE: CREATE RAZORPAY ORDER
@@ -1761,15 +1850,10 @@ def payment_success():
 
 
 
-# DAY 13: Verify Razorpay Payment & Store Order + Order Items
 
-from flask import request, jsonify, render_template
-import razorpay
-import traceback
-
-# Ensure razorpay_client is initialized (from Day 12)
-# razorpay_client = razorpay.Client(auth=(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET))
-
+# =========================================================
+# VERIFY RAZORPAY PAYMENT & STORE ORDER + ORDER ITEMS
+# =========================================================
 
 @app.route('/verify-payment', methods=['POST'])
 def verify_payment():
@@ -1826,7 +1910,7 @@ def verify_payment():
         cursor.execute("""
             INSERT INTO orders
             (user_id, razorpay_order_id, razorpay_payment_id, amount, payment_status)
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES (?, ?, ?, ?, ?)
         """, (
             user_id,
             razorpay_order_id,
@@ -1843,16 +1927,16 @@ def verify_payment():
             product_id = int(pid_str)
 
             cursor.execute("""
-                INSERT INTO order_items
-                (order_id, product_id, product_name, quantity, price)
-                VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO orders
+            (user_id, razorpay_order_id, razorpay_payment_id, amount, payment_status, created_at)
+            VALUES (?, ?, ?, ?, ?, datetime('now', 'localtime'))
             """, (
-                order_db_id,
-                product_id,
-                item['name'],
-                item['quantity'],
-                item['price']
-            ))
+            user_id,
+            razorpay_order_id,
+            razorpay_payment_id,
+            total_amount,
+            'paid'
+        ))
 
         conn.commit()
 
@@ -1889,6 +1973,12 @@ def verify_payment():
 
 
 
+
+
+# =========================================================
+# USER ORDER SUCCESS PAGE
+# =========================================================
+
 @app.route('/user/order-success/<int:order_db_id>')
 def order_success(order_db_id):
 
@@ -1897,36 +1987,47 @@ def order_success(order_db_id):
         return redirect('/user-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     # Get order details
     cursor.execute(
-        "SELECT * FROM orders WHERE order_id=%s AND user_id=%s",
+        """
+        SELECT *
+        FROM orders
+        WHERE order_id = ? AND user_id = ?
+        """,
         (order_db_id, session['user_id'])
     )
+
     order = cursor.fetchone()
 
     if not order:
         cursor.close()
         conn.close()
+
         flash("Order not found.", "danger")
         return redirect('/user/products')
 
     # Get purchased products
     cursor.execute(
-        "SELECT * FROM order_items WHERE order_id=%s",
+        "SELECT * FROM order_items WHERE order_id = ?",
         (order_db_id,)
     )
+
     items = cursor.fetchall()
 
     # Get delivery details
     cursor.execute(
-        """SELECT * FROM customer_address
-           WHERE user_id=%s
-           ORDER BY 1 DESC
-           LIMIT 1""",
+        """
+        SELECT *
+        FROM customer_address
+        WHERE user_id = ?
+        ORDER BY address_id DESC
+        LIMIT 1
+        """,
         (session['user_id'],)
     )
+
     customer = cursor.fetchone()
 
     cursor.close()
@@ -1939,23 +2040,47 @@ def order_success(order_db_id):
         customer=customer
     )
 
+
+# =========================================================
+# USER MY ORDERS
+# =========================================================
+
 @app.route('/user/my-orders')
 def my_orders():
+
     if 'user_id' not in session:
         flash("Please login!", "danger")
         return redirect('/user-login')
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM orders WHERE user_id=%s ORDER BY created_at DESC", (session['user_id'],))
+    cursor.execute(
+        """
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        """,
+        (session['user_id'],)
+    )
+
     orders = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template("user/my_orders.html", orders=orders)
+    return render_template(
+        "user/my_orders.html",
+        orders=orders
+    )
 
+
+
+
+# =========================================================
+# DOWNLOAD INVOICE
+# =========================================================
 
 @app.route("/user/download-invoice/<int:order_id>")
 def download_invoice(order_id):
@@ -1966,20 +2091,32 @@ def download_invoice(order_id):
 
     # Fetch order
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM orders WHERE order_id=%s AND user_id=%s",
-                   (order_id, session['user_id']))
+    cursor.execute(
+        """
+        SELECT *
+        FROM orders
+        WHERE order_id = ? AND user_id = ?
+        """,
+        (order_id, session['user_id'])
+    )
+
     order = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM order_items WHERE order_id=%s", (order_id,))
+    cursor.execute(
+        "SELECT * FROM order_items WHERE order_id = ?",
+        (order_id,)
+    )
+
     items = cursor.fetchall()
+
     cursor.execute("""
-    SELECT full_name, phone, delivery_address
-    FROM customer_address
-    WHERE user_id = %s
-    ORDER BY address_id DESC
-    LIMIT 1
+        SELECT full_name, phone, delivery_address
+        FROM customer_address
+        WHERE user_id = ?
+        ORDER BY address_id DESC
+        LIMIT 1
     """, (session['user_id'],))
 
     customer = cursor.fetchone()
@@ -1993,13 +2130,14 @@ def download_invoice(order_id):
 
     # Render invoice HTML
     html = render_template(
-    "user/invoice.html",
-    order=order,
-    items=items,
-    customer=customer
-)
+        "user/invoice.html",
+        order=order,
+        items=items,
+        customer=customer
+    )
 
     pdf = generate_pdf(html)
+
     if not pdf:
         flash("Error generating PDF", "danger")
         return redirect('/user/my-orders')
@@ -2007,9 +2145,17 @@ def download_invoice(order_id):
     # Prepare response
     response = make_response(pdf.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f"attachment; filename=invoice_{order_id}.pdf"
+    response.headers['Content-Disposition'] = (
+        f"attachment; filename=invoice_{order_id}.pdf"
+    )
 
     return response
+
+
+# =========================================================
+# USER FORGOT PASSWORD - SEND OTP
+# =========================================================
+
 @app.route('/user-forgot-password', methods=['GET', 'POST'])
 def user_forgot_password():
 
@@ -2019,10 +2165,10 @@ def user_forgot_password():
     email = request.form['email']
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE email=%s",
+        "SELECT * FROM users WHERE email=?",
         (email,)
     )
 
@@ -2069,6 +2215,7 @@ def user_forgot_password():
 
 
 
+
 @app.route('/user-verify-otp', methods=['GET', 'POST'])
 def verify_user_otp():
 
@@ -2085,40 +2232,72 @@ def verify_user_otp():
     flash("Invalid OTP. Please try again.", "danger")
     return redirect(url_for('verify_user_otp'))
 
+
+
+# =========================================================
+# USER RESET PASSWORD
+# =========================================================
+
 @app.route('/user-reset-password', methods=['GET', 'POST'])
 def user_reset_password():
 
     if not session.get('otp_verified'):
+        flash("Please verify OTP first!", "danger")
         return redirect(url_for('user_forgot_password'))
 
     if request.method == 'GET':
         return render_template("user/reset_password.html")
 
-    password = request.form['password']
-    confirm_password = request.form['confirm_password']
+    password = request.form.get('password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if not password or not confirm_password:
+        flash("Please fill in all fields!", "danger")
+        return redirect(url_for('user_reset_password'))
+
+    if len(password) < 8:
+        flash("Password must contain at least 8 characters!", "danger")
+        return redirect(url_for('user_reset_password'))
 
     if password != confirm_password:
         flash("Passwords do not match!", "danger")
         return redirect(url_for('user_reset_password'))
+
+    email = session.get('reset_email')
+
+    if not email:
+        flash("Please request a password reset again!", "danger")
+        return redirect(url_for('user_forgot_password'))
 
     hashed_password = bcrypt.hashpw(
         password.encode('utf-8'),
         bcrypt.gensalt()
     ).decode('utf-8')
 
-    email = session.get('reset_email')
-
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "UPDATE users SET password=%s WHERE email=%s",
-        (hashed_password, email)
-    )
+    try:
+        cursor.execute(
+            "UPDATE users SET password=? WHERE email=?",
+            (hashed_password, email)
+        )
 
-    conn.commit()
-    cursor.close()
-    conn.close()
+        if cursor.rowcount == 0:
+            flash("User account not found!", "danger")
+            return redirect(url_for('user_forgot_password'))
+
+        conn.commit()
+
+    except Exception:
+        conn.rollback()
+        app.logger.exception("User password reset failed")
+        flash("Unable to update password. Please try again.", "danger")
+        return redirect(url_for('user_reset_password'))
+
+    finally:
+        cursor.close()
+        conn.close()
 
     session.pop('reset_email', None)
     session.pop('reset_otp', None)
@@ -2127,6 +2306,7 @@ def user_reset_password():
     flash("Password updated successfully!", "success")
 
     return redirect(url_for('user_login'))
+
 
 
 

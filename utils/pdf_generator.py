@@ -1,4 +1,4 @@
-from xhtml2pdf import pisa
+git statusfrom xhtml2pdf import pisa
 from io import BytesIO
 
 def generate_pdf(template_html):
