@@ -1850,7 +1850,6 @@ def payment_success():
 
 
 
-
 # =========================================================
 # VERIFY RAZORPAY PAYMENT & STORE ORDER + ORDER ITEMS
 # =========================================================
@@ -1862,7 +1861,6 @@ def verify_payment():
         flash("Please login to complete the payment.", "danger")
         return redirect('/user-login')
 
-    # Get Razorpay payment details
     razorpay_payment_id = request.form.get('razorpay_payment_id')
     razorpay_order_id = request.form.get('razorpay_order_id')
     razorpay_signature = request.form.get('razorpay_signature')
@@ -1871,7 +1869,6 @@ def verify_payment():
         flash("Payment verification failed!", "danger")
         return redirect('/user/cart')
 
-    # Verify Razorpay signature
     payload = {
         'razorpay_order_id': razorpay_order_id,
         'razorpay_payment_id': razorpay_payment_id,
@@ -1886,7 +1883,6 @@ def verify_payment():
         flash("Payment verification failed!", "danger")
         return redirect('/user/cart')
 
-    # Get ONLY selected products
     user_id = session['user_id']
     selected_cart = session.get('selected_cart', {})
     original_cart = session.get('cart', {})
@@ -1895,7 +1891,6 @@ def verify_payment():
         flash("No selected products found!", "danger")
         return redirect('/user/cart')
 
-    # Calculate selected products total
     total_amount = sum(
         float(item['price']) * int(item['quantity'])
         for item in selected_cart.values()
@@ -1906,10 +1901,11 @@ def verify_payment():
 
     try:
 
-        # Insert order
+        # Insert main order
         cursor.execute("""
             INSERT INTO orders
-            (user_id, razorpay_order_id, razorpay_payment_id, amount, payment_status)
+            (user_id, razorpay_order_id, razorpay_payment_id,
+             amount, payment_status)
             VALUES (?, ?, ?, ?, ?)
         """, (
             user_id,
@@ -1921,32 +1917,30 @@ def verify_payment():
 
         order_db_id = cursor.lastrowid
 
-        # Insert ONLY selected products into order_items
+        # Insert purchased products into order_items
         for pid_str, item in selected_cart.items():
 
             product_id = int(pid_str)
 
             cursor.execute("""
-            INSERT INTO orders
-            (user_id, razorpay_order_id, razorpay_payment_id, amount, payment_status, created_at)
-            VALUES (?, ?, ?, ?, ?, datetime('now', 'localtime'))
+                INSERT INTO order_items
+                (order_id, product_id, product_name, quantity, price)
+                VALUES (?, ?, ?, ?, ?)
             """, (
-            user_id,
-            razorpay_order_id,
-            razorpay_payment_id,
-            total_amount,
-            'paid'
-        ))
+                order_db_id,
+                product_id,
+                item['name'],
+                int(item['quantity']),
+                float(item['price'])
+            ))
 
         conn.commit()
 
-        # Remove ONLY purchased products from original cart
+        # Remove only purchased products from cart
         for pid in selected_cart:
             original_cart.pop(pid, None)
 
         session['cart'] = original_cart
-
-        # Clear selected products and Razorpay session data
         session.pop('selected_cart', None)
         session.pop('razorpay_order_id', None)
 
@@ -1970,6 +1964,7 @@ def verify_payment():
     finally:
         cursor.close()
         conn.close()
+
 
 
 
